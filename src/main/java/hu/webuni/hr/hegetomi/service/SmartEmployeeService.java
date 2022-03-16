@@ -4,8 +4,8 @@ import hu.webuni.hr.hegetomi.config.HrConfigProperties;
 import hu.webuni.hr.hegetomi.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class SmartEmployeeService implements EmployeeService {
@@ -16,7 +16,7 @@ public class SmartEmployeeService implements EmployeeService {
     @Override
     public int getPayRaisePercent(Employee employee) {
         checkConfigIntegrity();
-        int months = getMonths(employee);
+        long months = getMonths(employee);
 
         for (int i = 0; i < config.getRaise().getSmart().getSince().size() ; i++) {
             if(months>= config.getRaise().getSmart().getSince().get(i) * 12 ){
@@ -36,11 +36,9 @@ public class SmartEmployeeService implements EmployeeService {
         }
     }
 
-    private int getMonths(Employee employee) {
+    private long getMonths(Employee employee) {
         LocalDateTime currDate = LocalDateTime.now();
-        int years = currDate.getYear() - employee.getEmpSince().getYear();
-        int months = currDate.getMonthValue() - employee.getEmpSince().getMonthValue();
-        return years * 12 + months;
+        return ChronoUnit.MONTHS.between(employee.getEmpSince(),currDate);
     }
 
 }
