@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: smart
+hr:
+  raise:
+    smart:
+      percent: 20,5,2,0
+      since: 10,5,2.5
+
+---
+spring:
+  config:
+    activate:
+      on-profile: def
+hr:
+  raise:
+    def:
+      percent: 5
