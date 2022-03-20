@@ -1,5 +1,6 @@
 package hu.webuni.hr.hegetomi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,8 @@ public class EmployeeDto {
     private String title;
     private long salary;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    //@DateTimeFormat(iso = DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime empSince;
 
     public EmployeeDto(long id, String name, String title, long salary, LocalDateTime empSince) {
