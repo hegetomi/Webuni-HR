@@ -66,8 +66,9 @@ public class HrController {
         employees.remove(id);
     }
 
-    @GetMapping("/pricegt={amount}")
-    public List<EmployeeDto> getSalaryGreaterThan(@PathVariable long amount){
+    //eg.:/api/employees/?salary=1000
+    @GetMapping("/")
+    public List<EmployeeDto> getSalaryGreaterThan(@RequestParam("salary") long amount){
         return employees.values()
                 .stream()
                 .filter(v-> v.getSalary()>amount)
