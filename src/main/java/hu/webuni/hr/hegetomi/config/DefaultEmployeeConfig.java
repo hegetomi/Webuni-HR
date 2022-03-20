@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Profile;
 public class DefaultEmployeeConfig {
 
     @Bean
-    public EmployeeService employeeService(){
+    public EmployeeService employeeService() {
         return new DefaultEmployeeService();
     }
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees</title>
+</head>
+<body>
+
+<div th:align="center">
+    <a  href="/">Homepage</a>
+</div>
+<div>
+    <h1 th:align="center">List of employees</h1>
+</div>
+<div>
+
+    <table th:border="1px" th:align="center">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Salary</th>
+            <th>Employed Since</th>
+        </tr>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.id}">id</td>
+            <td th:text="${employee.name}">name</td>
+            <td th:text="${employee.title}">title</td>
+            <td th:text="${employee.salary}">salary</td>
+            <td th:text="${#temporals.format(employee.empSince,'yyyy-MM-dd')}">since</td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <br/>
+    <br/>
+</div>
+
+<div th:align="center">
+    <h2>Add new employee</h2>
+    <form th:action="@{/employees}" method="post" th:object="${newEmployee}">
+        Id: <input th:field="*{id}" /><br/>
+        Name: <input th:field="*{name}" /><br/>
+        Title: <input th:field="*{title}" /><br/>
+        Salary: <input th:field="*{salary}" /><br/>
+        Since: <input th:field="*{empSince}" /><br/>
+        <input type="submit" value="Add">
+    </form>
+</div>
+</body>
+</html>

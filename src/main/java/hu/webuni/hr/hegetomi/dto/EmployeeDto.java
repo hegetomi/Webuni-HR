@@ -1,11 +1,10 @@
-package hu.webuni.hr.hegetomi.model;
+package hu.webuni.hr.hegetomi.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-public class Employee {
-
+public class EmployeeDto {
     private long id;
     private String name;
     private String title;
@@ -13,15 +12,14 @@ public class Employee {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime empSince;
 
-    public Employee(long id, String name, String title, long salary, LocalDateTime empSince) {
+    public EmployeeDto(long id, String name, String title, long salary, LocalDateTime empSince) {
         this.id = id;
         this.name = name;
         this.title = title;
         this.salary = salary;
         this.empSince = empSince;
     }
-
-    public Employee() {
+    public EmployeeDto(){
 
     }
 
