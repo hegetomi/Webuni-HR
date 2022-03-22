@@ -20,14 +20,15 @@
             <th>Name</th>
             <th>Title</th>
             <th>Salary</th>
-            <th>Employed Since</th>
+            <th>Employee Since</th>
         </tr>
         <tr th:each="employee : ${employees}">
             <td th:text="${employee.id}">id</td>
-            <td th:text="${employee.name}">name</td>
+            <td> <a th:href="@{'/editemployee/'+${employee.id}}" th:text="${employee.name}">name</a></td>
             <td th:text="${employee.title}">title</td>
             <td th:text="${employee.salary}">salary</td>
             <td th:text="${#temporals.format(employee.empSince,'yyyy-MM-dd')}">since</td>
+            <td><a th:href="@{'/delete/' + ${employee.id}}">Delete</a></td>
         </tr>
     </table>
 </div>

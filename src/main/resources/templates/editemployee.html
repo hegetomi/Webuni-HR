@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees</title>
+</head>
+<body>
+
+<div th:align="center">
+    <a  href="/employees">Back</a>
+</div>
+<div>
+    <h1 th:align="center">Edit employee</h1>
+</div>
+
+
+<div th:align="center">
+    <h2>Add new employee</h2>
+    <form th:action="@{/employees}" th:method="put" th:object="${employee}">
+        Id: <input disabled th:field="*{id}" /><br/>
+        Name: <input th:field="*{name}" /><br/>
+        Title: <input th:field="*{title}" /><br/>
+        Salary: <input th:field="*{salary}" /><br/>
+        Since: <input th:field="*{empSince}" /><br/>
+        <input type="submit" value="Save changes">
+    </form>
+</div>
+</body>
+</html>
