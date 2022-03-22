@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -79,6 +76,39 @@ public class CompanyController {
     @DeleteMapping("/{id}")
     public void deleteCompany(@PathVariable long id) {
         companies.remove(id);
+    }
+
+
+    @PostMapping("/employee/{id}")
+    public ResponseEntity<EmployeeDto> addEmployeeToCompany(@PathVariable long id,@RequestBody EmployeeDto dto){
+        if (!companies.containsKey(dto.getId())) {
+            companies.get(id).getEmployees().add(dto);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.status(403).build();
+        }
+    }
+
+    @DeleteMapping("/employee/{id}")
+    public void deleteEmployee(@PathVariable long id, @RequestBody long empId){
+        //Can't wait to use FKs & dbs
+        Optional<EmployeeDto> selected = companies.get(id).getEmployees()
+                .stream()
+                .filter(f -> f.getId() == empId)
+                .findFirst();
+        selected.ifPresent(k -> companies.get(id).getEmployees().remove(k));
+    }
+
+    @PutMapping("/employees/{id}")
+    public ResponseEntity<List<EmployeeDto>> replaceEmployees(@PathVariable long id, @RequestBody List<EmployeeDto> dtos){
+
+        if (companies.containsKey(id)) {
+            companies.get(id).setEmployees(dtos);
+            return ResponseEntity.ok(dtos);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 }

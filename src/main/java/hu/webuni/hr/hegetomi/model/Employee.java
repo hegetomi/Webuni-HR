@@ -1,5 +1,6 @@
 package hu.webuni.hr.hegetomi.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class Employee {
     private String title;
     private long salary;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime empSince;
 
     public Employee(long id, String name, String title, long salary, LocalDateTime empSince) {
