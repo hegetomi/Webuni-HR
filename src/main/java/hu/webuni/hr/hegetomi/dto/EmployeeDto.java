@@ -11,7 +11,6 @@ public class EmployeeDto {
     private String title;
     private long salary;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    //@DateTimeFormat(iso = DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime empSince;
 

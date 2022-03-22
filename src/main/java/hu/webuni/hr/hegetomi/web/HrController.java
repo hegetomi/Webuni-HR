@@ -1,7 +1,6 @@
 package hu.webuni.hr.hegetomi.web;
 
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
-import hu.webuni.hr.hegetomi.model.Employee;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/employees")
 public class HrController {
 
-    private Map<Long, EmployeeDto> employees = new HashMap<>();
+    private final Map<Long, EmployeeDto> employees = new HashMap<>();
 
     {
         employees.put(0L,new EmployeeDto(0, "John Doe", "Architect", 2000, LocalDateTime.of(2000, 2, 10, 12, 12)));
@@ -51,7 +50,7 @@ public class HrController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDto> modifyAirport(@PathVariable long id, @RequestBody EmployeeDto dto) {
+    public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id, @RequestBody EmployeeDto dto) {
         if (employees.containsKey(id)) {
             dto.setId(id);
             employees.put(id, dto);
@@ -62,7 +61,7 @@ public class HrController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAirport(@PathVariable long id) {
+    public void deleteEmployee(@PathVariable long id) {
         employees.remove(id);
     }
 
