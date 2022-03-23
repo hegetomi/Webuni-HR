@@ -1,9 +1,5 @@
 package hu.webuni.hr.hegetomi.dto.company;
 
-import hu.webuni.hr.hegetomi.dto.EmployeeDto;
-
-import java.util.List;
-
 public class TruncatedCompanyDto implements CompanyInterface{
 
     private long id;

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SalaryService {
 
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     public SalaryService(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -16,6 +16,10 @@ public class SalaryService {
         long oldSalary = employee.getSalary();
         long newSalary = oldSalary + (long) (oldSalary * ((double) employeeService.getPayRaisePercent(employee) / 100));
         employee.setSalary(newSalary);
+    }
+
+    public int getRaisePercent(Employee employee){
+        return employeeService.getPayRaisePercent(employee);
     }
 
 }

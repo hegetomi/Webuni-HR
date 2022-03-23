@@ -41,9 +41,8 @@ public class CompanyController {
 
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDto> getById(@PathVariable long id) {
+    public ResponseEntity<CompanyInterface> getById(@PathVariable long id) {
         CompanyDto selected = companies.get(id);
         if (selected != null) {
             return ResponseEntity.ok(selected);
@@ -53,7 +52,7 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<CompanyDto> addCompany(@RequestBody CompanyDto dto) {
+    public ResponseEntity<CompanyInterface> addCompany(@RequestBody CompanyDto dto) {
         if (!companies.containsKey(dto.getId())) {
             companies.put(dto.getId(), dto);
             return ResponseEntity.ok(dto);
@@ -63,7 +62,7 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CompanyDto> modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
+    public ResponseEntity<CompanyInterface> modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
         if (companies.containsKey(id)) {
             dto.setId(id);
             companies.put(id, dto);
@@ -79,7 +78,7 @@ public class CompanyController {
     }
 
 
-    @PostMapping("/employee/{id}")
+    @PostMapping("/{id}/employee")
     public ResponseEntity<EmployeeDto> addEmployeeToCompany(@PathVariable long id,@RequestBody EmployeeDto dto){
         if (!companies.containsKey(dto.getId())) {
             companies.get(id).getEmployees().add(dto);
@@ -89,17 +88,17 @@ public class CompanyController {
         }
     }
 
-    @DeleteMapping("/employee/{id}")
-    public void deleteEmployee(@PathVariable long id, @RequestBody long empId){
-        //Can't wait to use FKs & dbs
-        Optional<EmployeeDto> selected = companies.get(id).getEmployees()
+    @DeleteMapping("/{compid}/employee/{id}")
+    public void deleteEmployee(@PathVariable long compid, @PathVariable long id){
+        //Can't wait to use DBs
+        Optional<EmployeeDto> selected = companies.get(compid).getEmployees()
                 .stream()
-                .filter(f -> f.getId() == empId)
+                .filter(f -> f.getId() == id)
                 .findFirst();
-        selected.ifPresent(k -> companies.get(id).getEmployees().remove(k));
+        selected.ifPresent(k -> companies.get(compid).getEmployees().remove(k));
     }
 
-    @PutMapping("/employees/{id}")
+    @PutMapping("/{id}/employees")
     public ResponseEntity<List<EmployeeDto>> replaceEmployees(@PathVariable long id, @RequestBody List<EmployeeDto> dtos){
 
         if (companies.containsKey(id)) {

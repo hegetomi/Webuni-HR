@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class HrConfigProperties {
 
-    private Raise raise = new Raise();
+    private final Raise raise = new Raise();
 
     public Raise getRaise() {
         return raise;
