@@ -15,9 +15,8 @@
 
 
 <div th:align="center">
-    <h2>Add new employee</h2>
     <form th:action="@{/employees}" th:method="put" th:object="${employee}">
-        Id: <input disabled th:field="*{id}" /><br/>
+        Id: <input readonly="readonly" th:field="*{id}" /><br/>
         Name: <input th:field="*{name}" /><br/>
         Title: <input th:field="*{title}" /><br/>
         Salary: <input th:field="*{salary}" /><br/>

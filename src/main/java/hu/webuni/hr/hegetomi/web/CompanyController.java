@@ -90,12 +90,7 @@ public class CompanyController {
 
     @DeleteMapping("/{compid}/employee/{id}")
     public void deleteEmployee(@PathVariable long compid, @PathVariable long id){
-        //Can't wait to use DBs
-        Optional<EmployeeDto> selected = companies.get(compid).getEmployees()
-                .stream()
-                .filter(f -> f.getId() == id)
-                .findFirst();
-        selected.ifPresent(k -> companies.get(compid).getEmployees().remove(k));
+        companies.get(compid).getEmployees().removeIf(n -> n.getId() == id);
     }
 
     @PutMapping("/{id}/employees")
