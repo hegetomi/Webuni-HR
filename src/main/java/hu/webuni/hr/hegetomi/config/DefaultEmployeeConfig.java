@@ -1,8 +1,9 @@
 package hu.webuni.hr.hegetomi.config;
 
-import hu.webuni.hr.hegetomi.service.employee.DefaultEmployeeServiceService;
+import hu.webuni.hr.hegetomi.service.employee.DefaultEmployeeService;
 import hu.webuni.hr.hegetomi.service.employee.EmployeeServiceAncestor;
 import hu.webuni.hr.hegetomi.service.employee.EmployeeService;
+import hu.webuni.hr.hegetomi.service.employee.SmartEmployeeService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,12 +15,11 @@ public class DefaultEmployeeConfig {
     @Bean
     public EmployeeService employeeService() {
 
-        return new DefaultEmployeeServiceService();
+        return new DefaultEmployeeService();
     }
 
-    @Bean
-    public EmployeeServiceAncestor employeeAncestor(){
-        return new DefaultEmployeeServiceService();
-    }
+@Bean EmployeeServiceAncestor employeeServiceAncestor(){
+        return new DefaultEmployeeService();
+}
 
 }

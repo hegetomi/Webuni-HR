@@ -4,6 +4,7 @@ import hu.webuni.hr.hegetomi.model.Employee;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class EmployeeServiceAncestor {
 
@@ -48,6 +49,12 @@ public abstract class EmployeeServiceAncestor {
 
     public void delete(long id){
         employees.remove(id);
+    }
+
+    public List<Employee> greaterSalaryThan(long amount){
+        return employees.values().stream()
+                .filter(v -> v.getSalary() > amount)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
 }

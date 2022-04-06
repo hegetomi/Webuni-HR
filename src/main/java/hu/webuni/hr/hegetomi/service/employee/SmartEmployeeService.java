@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
-public class SmartEmployeeServiceService extends EmployeeServiceAncestor implements EmployeeService {
+public class SmartEmployeeService extends EmployeeServiceAncestor implements EmployeeService {
 
     @Autowired
     HrConfigProperties config;

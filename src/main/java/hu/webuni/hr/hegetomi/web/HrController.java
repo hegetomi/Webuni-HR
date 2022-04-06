@@ -2,6 +2,7 @@ package hu.webuni.hr.hegetomi.web;
 
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
 import hu.webuni.hr.hegetomi.mapper.EmployeeMapper;
+import hu.webuni.hr.hegetomi.service.employee.EmployeeService;
 import hu.webuni.hr.hegetomi.service.employee.EmployeeServiceAncestor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,48 +20,44 @@ public class HrController {
 
 
     @Autowired
-    EmployeeServiceAncestor ancestor;
+    EmployeeServiceAncestor employeeServiceAncestor;
+
 
     @Autowired
-    EmployeeMapper mapper;
+    EmployeeMapper hrEmployeeMapper;
 
     @GetMapping
     public List<EmployeeDto> getAll() {
-        // EmployeeAncestor ancestor = (EmployeeAncestor) service;
-        return mapper.employeesToDtos(ancestor.findAll());
+        return hrEmployeeMapper.employeesToDtos(employeeServiceAncestor.findAll());
     }
 
     @GetMapping("/{id}")
     public EmployeeDto getById(@PathVariable long id) {
-        return mapper.employeeToDto(ancestor.findById(id)
+        return hrEmployeeMapper.employeeToDto(employeeServiceAncestor.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping
     public EmployeeDto addEmployee(@RequestBody @Valid EmployeeDto dto) {
-
-        return mapper.employeeToDto(ancestor.save(mapper.dtoToEmployee(dto))
+        return hrEmployeeMapper.employeeToDto(employeeServiceAncestor.save(hrEmployeeMapper.dtoToEmployee(dto))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN)));
     }
 
     @PutMapping("/{id}")
     public EmployeeDto modifyEmployee(@PathVariable long id, @RequestBody @Valid EmployeeDto dto) {
-        return mapper.employeeToDto(ancestor.edit(mapper.dtoToEmployee(dto),id)
+        return hrEmployeeMapper.employeeToDto(employeeServiceAncestor.edit(hrEmployeeMapper.dtoToEmployee(dto),id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable long id) {
-        ancestor.delete(id);
+        employeeServiceAncestor.delete(id);
     }
 
     //eg.:/api/employees/?salary=1000
     @GetMapping("/")
     public List<EmployeeDto> getSalaryGreaterThan(@RequestParam("salary") long amount) {
-        List<EmployeeDto> employees = mapper.employeesToDtos(ancestor.findAll());
-        return employees.stream()
-                .filter(v -> v.getSalary() > amount)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return hrEmployeeMapper.employeesToDtos(employeeServiceAncestor.greaterSalaryThan(amount));
     }
 
 

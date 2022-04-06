@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DefaultEmployeeServiceService extends EmployeeServiceAncestor implements EmployeeService {
+public class DefaultEmployeeService extends EmployeeServiceAncestor implements EmployeeService {
 
     @Autowired
     HrConfigProperties config;
