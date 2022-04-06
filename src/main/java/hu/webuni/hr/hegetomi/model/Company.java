@@ -1,8 +1,5 @@
 package hu.webuni.hr.hegetomi.model;
 
-import hu.webuni.hr.hegetomi.dto.EmployeeDto;
-import hu.webuni.hr.hegetomi.dto.company.CompanyInterface;
-
 import java.util.List;
 
 public class Company {

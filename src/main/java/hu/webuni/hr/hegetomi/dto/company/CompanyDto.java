@@ -4,7 +4,7 @@ import hu.webuni.hr.hegetomi.dto.EmployeeDto;
 
 import java.util.List;
 
-public class CompanyDto implements CompanyInterface{
+public class CompanyDto implements CompanyDtoInterface {
 
     private long id;
     private long registrationNumber;

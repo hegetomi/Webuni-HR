@@ -2,7 +2,7 @@ package hu.webuni.hr.hegetomi.web;
 
 import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
-import hu.webuni.hr.hegetomi.dto.company.CompanyInterface;
+import hu.webuni.hr.hegetomi.dto.company.CompanyDtoInterface;
 import hu.webuni.hr.hegetomi.mapper.CompanyMapper;
 import hu.webuni.hr.hegetomi.mapper.EmployeeMapper;
 import hu.webuni.hr.hegetomi.service.CompanyService;
@@ -29,7 +29,7 @@ public class CompanyController {
 
 
     @GetMapping
-    public List<CompanyInterface> getAll(@RequestParam(required = false, defaultValue = "false", name = "full") String full) {
+    public List<CompanyDtoInterface> getAll(@RequestParam(required = false, defaultValue = "false", name = "full") String full) {
         if ("true".equalsIgnoreCase(full)) {
             return new ArrayList<>(companyMapper.companiesToDtos(companyService.findAll()));
         } else {
@@ -39,20 +39,20 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public CompanyInterface getById(@PathVariable long id) {
+    public CompanyDtoInterface getById(@PathVariable long id) {
         return companyMapper.companyToDto(companyService.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping
-    public CompanyInterface addCompany(@RequestBody CompanyDto dto) {
+    public CompanyDtoInterface addCompany(@RequestBody CompanyDto dto) {
         return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(dto))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN)));
 
     }
 
     @PutMapping("/{id}")
-    public CompanyInterface modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
+    public CompanyDtoInterface modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
         return companyMapper.companyToDto(companyService.edit(companyMapper.dtoToCompany(dto), id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }

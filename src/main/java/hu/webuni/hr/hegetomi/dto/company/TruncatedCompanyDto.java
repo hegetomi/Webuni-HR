@@ -1,6 +1,6 @@
 package hu.webuni.hr.hegetomi.dto.company;
 
-public class TruncatedCompanyDto implements CompanyInterface{
+public class TruncatedCompanyDto implements CompanyDtoInterface {
 
     private long id;
     private long registrationNumber;

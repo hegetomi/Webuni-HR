@@ -1,10 +1,7 @@
 package hu.webuni.hr.hegetomi.service;
 
-import hu.webuni.hr.hegetomi.dto.EmployeeDto;
-import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.model.Company;
 import hu.webuni.hr.hegetomi.model.Employee;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
