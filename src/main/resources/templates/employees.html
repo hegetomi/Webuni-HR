@@ -41,7 +41,7 @@
 <div th:align="center">
     <h2>Add new employee</h2>
     <form th:action="@{/employees}" method="post" th:object="${newEmployee}">
-        Id: <input th:field="*{id}" /><br/>
+        Id: <input th:hidden="" th:value="${employees.size}" /><br/>
         Name: <input th:field="*{name}" /><br/>
         Title: <input th:field="*{title}" /><br/>
         Salary: <input th:field="*{salary}" /><br/>

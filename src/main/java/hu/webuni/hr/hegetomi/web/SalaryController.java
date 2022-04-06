@@ -1,7 +1,8 @@
 package hu.webuni.hr.hegetomi.web;
 
 import hu.webuni.hr.hegetomi.model.Employee;
-import hu.webuni.hr.hegetomi.service.SalaryService;
+import hu.webuni.hr.hegetomi.service.employee.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -9,14 +10,13 @@ import org.springframework.web.bind.annotation.*;
 public class SalaryController {
 
 
-    private final SalaryService service;
-
-    public SalaryController(SalaryService service){
-        this.service = service;
-    }
+    @Autowired
+    private EmployeeService employeeService;
 
     @GetMapping
     public int getRaisePercent(@RequestBody Employee employee){
-        return service.getRaisePercent(employee);
+        return employeeService.getPayRaisePercent(employee);
     }
+
+
 }

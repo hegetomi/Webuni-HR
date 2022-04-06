@@ -1,4 +1,4 @@
-package hu.webuni.hr.hegetomi.service;
+package hu.webuni.hr.hegetomi.service.employee;
 
 import hu.webuni.hr.hegetomi.config.HrConfigProperties;
 import hu.webuni.hr.hegetomi.model.Employee;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
-public class SmartEmployeeService implements EmployeeService {
+public class SmartEmployeeServiceService extends EmployeeServiceAncestor implements EmployeeService {
 
     @Autowired
     HrConfigProperties config;
