@@ -18,8 +18,9 @@ public class DefaultEmployeeConfig {
         return new DefaultEmployeeService();
     }
 
-@Bean EmployeeServiceAncestor employeeServiceAncestor(){
+    @Bean
+    public EmployeeServiceAncestor employeeServiceAncestor() {
         return new DefaultEmployeeService();
-}
+    }
 
 }
