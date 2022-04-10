@@ -119,6 +119,9 @@ public class CompanyService {
         }//ha létezik és nem itt akkor throw exception
         else {
             Employee existingEmployee = employeeRepository.getById(employee.getId());
+            if (existingEmployee.getWorksAt() == null) {
+                existingEmployee.setWorksAt(companyRepository.getById(compId));
+            }
             if (existingEmployee.getWorksAt().getId() != compId) {
                 throw new EmployeeIsEmployedException(employee.getId());
             }
