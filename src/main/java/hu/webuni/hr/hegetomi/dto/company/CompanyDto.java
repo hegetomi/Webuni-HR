@@ -2,6 +2,7 @@ package hu.webuni.hr.hegetomi.dto.company;
 
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public class CompanyDto {
@@ -10,6 +11,7 @@ public class CompanyDto {
     private long registrationNumber;
     private String name;
     private String address;
+    @Valid
     private List<EmployeeDto> employees;
 
     public CompanyDto(long id, long registrationNumber, String name, String address, List<EmployeeDto> employees) {

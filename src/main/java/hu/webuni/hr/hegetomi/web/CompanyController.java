@@ -7,12 +7,14 @@ import hu.webuni.hr.hegetomi.mapper.EmployeeMapper;
 import hu.webuni.hr.hegetomi.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.*;
 
+@Validated
 @RestController
 @RequestMapping("/api/companies")
 public class CompanyController {
@@ -49,7 +51,7 @@ public class CompanyController {
     }
 
     @PostMapping
-    public CompanyDto addCompany(@RequestBody @Valid CompanyDto dto) {
+    public CompanyDto addCompany(@RequestBody CompanyDto dto) {
         return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(dto)));
 
     }
@@ -68,7 +70,7 @@ public class CompanyController {
 
 
     @PostMapping("/{id}/employee")
-    public EmployeeDto addEmployeeToCompany(@PathVariable long id, @RequestBody EmployeeDto dto) {
+    public EmployeeDto addEmployeeToCompany(@PathVariable long id, @RequestBody @Valid EmployeeDto dto) {
         return employeeMapper.employeeToDto(companyService.addEmployeeToCompany(id, employeeMapper.dtoToEmployee(dto))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
@@ -79,7 +81,7 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}/employees")
-    public List<EmployeeDto> replaceEmployees(@PathVariable long id, @RequestBody List<EmployeeDto> dtos) {
+    public List<EmployeeDto> replaceEmployees(@PathVariable long id, @RequestBody  List<@Valid EmployeeDto> dtos) {
 
         return employeeMapper.employeesToDtos(companyService.replaceEmployees(id, employeeMapper.DtosToEmployees(dtos))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));

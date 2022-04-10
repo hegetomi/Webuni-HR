@@ -65,7 +65,7 @@ public class CompanyService {
 
             Company company = companyRepository.getById(id);
             company.getEmployees().add(employee);
-            companyRepository.save(company);
+            //companyRepository.save(company);
             return Optional.of(employee);
         }
     }
@@ -78,7 +78,7 @@ public class CompanyService {
             if (doesExist.isPresent()) {
                 Employee toRemove = doesExist.get();
                 toRemove.setWorksAt(null);
-                employeeRepository.save(toRemove);
+                //employeeRepository.save(toRemove);
             }
         }
     }
@@ -94,22 +94,19 @@ public class CompanyService {
         } else {
 
             List<Employee> currEmployees = companyRepository.findById(compId).get().getEmployees();
-            logger.warn(currEmployees.size() + " empsize");
-            logger.warn(compId + " compid");
-            logger.warn(currEmployees.get(0).getId() + " id0");
-            logger.warn(currEmployees.get(1).getId() + " id1");
+
             for (Employee employee : employees) {
                 checkEmployeeIntegrity(compId, employee);
             }
 
             for (Employee employee : currEmployees) {
                 employee.setWorksAt(null);
-                employeeRepository.save(employee);
+                //employeeRepository.save(employee);
             }
 
             Company company = companyRepository.getById(compId);
             company.setEmployees(employees);
-            companyRepository.save(company);
+            //companyRepository.save(company);
             return Optional.of(employees);
         }
 
