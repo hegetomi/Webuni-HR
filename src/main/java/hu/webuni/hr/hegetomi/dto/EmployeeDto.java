@@ -1,6 +1,7 @@
 package hu.webuni.hr.hegetomi.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import hu.webuni.hr.hegetomi.model.Company;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
@@ -19,6 +20,8 @@ public class EmployeeDto {
     @Positive
     private long salary;
 
+    private Company worksAt;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Past
@@ -31,7 +34,8 @@ public class EmployeeDto {
         this.salary = salary;
         this.empSince = empSince;
     }
-    public EmployeeDto(){
+
+    public EmployeeDto() {
 
     }
 
@@ -74,4 +78,10 @@ public class EmployeeDto {
     public void setEmpSince(LocalDateTime empSince) {
         this.empSince = empSince;
     }
+
+    public void setWorksAt(Company worksAt) {
+        this.worksAt = worksAt;
+    }
+    //No worksat getter to hide it, else stackoverflow :C
+
 }

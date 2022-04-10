@@ -3,10 +3,15 @@ package hu.webuni.hr.hegetomi.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 public class Employee {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
+    @SequenceGenerator(name = "employee_seq", allocationSize = 1)
     private long id;
     private String name;
     private String title;
@@ -14,6 +19,11 @@ public class Employee {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime empSince;
+
+
+    @ManyToOne(fetch = FetchType.EAGER  , cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "company_id")
+    private Company worksAt;
 
     public Employee(long id, String name, String title, long salary, LocalDateTime empSince) {
         this.id = id;
@@ -65,5 +75,13 @@ public class Employee {
 
     public void setEmpSince(LocalDateTime empSince) {
         this.empSince = empSince;
+    }
+
+    public Company getWorksAt() {
+        return worksAt;
+    }
+
+    public void setWorksAt(Company worksAt) {
+        this.worksAt = worksAt;
     }
 }

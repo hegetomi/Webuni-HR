@@ -1,13 +1,19 @@
 package hu.webuni.hr.hegetomi.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
 public class Company {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_seq")
+    @SequenceGenerator(name = "company_seq", allocationSize = 1)
     private long id;
     private long registrationNumber;
     private String name;
     private String address;
+    @OneToMany(mappedBy = "worksAt", fetch = FetchType.EAGER)
     private List<Employee> employees;
 
     public Company(long id, long registrationNumber, String name, String address, List<Employee> employees) {
@@ -59,5 +65,15 @@ public class Company {
 
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
+    }
+
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+        employee.setWorksAt(this);
+    }
+
+    public void removeEmployee(Employee employee){
+        employees.remove(employee);
+        employee.setWorksAt(null);
     }
 }

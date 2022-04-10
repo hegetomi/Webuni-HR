@@ -2,7 +2,6 @@ package hu.webuni.hr.hegetomi.web;
 
 import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
-import hu.webuni.hr.hegetomi.dto.company.CompanyDtoInterface;
 import hu.webuni.hr.hegetomi.mapper.CompanyMapper;
 import hu.webuni.hr.hegetomi.mapper.EmployeeMapper;
 import hu.webuni.hr.hegetomi.service.CompanyService;
@@ -11,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -27,32 +27,36 @@ public class CompanyController {
     @Autowired
     EmployeeMapper employeeMapper;
 
-
     @GetMapping
-    public List<CompanyDtoInterface> getAll(@RequestParam(required = false, defaultValue = "false", name = "full") String full) {
+    public List<CompanyDto> getAll(@RequestParam(required = false, defaultValue = "false", name = "full") String full) {
         if ("true".equalsIgnoreCase(full)) {
             return new ArrayList<>(companyMapper.companiesToDtos(companyService.findAll()));
         } else {
-            return new ArrayList<>(companyMapper.companiesToTruncatedDtos(companyService.findAll()));
+            return new ArrayList<>(companyMapper.companiesToPartialCompanies(companyService.findAll()));
         }
 
     }
 
     @GetMapping("/{id}")
-    public CompanyDtoInterface getById(@PathVariable long id) {
-        return companyMapper.companyToDto(companyService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    public CompanyDto getById(@RequestParam(required = false, defaultValue = "false", name = "full") String full, @PathVariable long id) {
+        if ("true".equalsIgnoreCase(full)) {
+            return companyMapper.companyToDto(companyService.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        } else {
+            return companyMapper.mapWithoutEmployees(companyService.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        }
     }
 
     @PostMapping
-    public CompanyDtoInterface addCompany(@RequestBody CompanyDto dto) {
-        return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(dto))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN)));
+    public CompanyDto addCompany(@RequestBody @Valid CompanyDto dto) {
+        return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(dto)));
 
     }
 
     @PutMapping("/{id}")
-    public CompanyDtoInterface modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
+    public CompanyDto modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
+        dto.setId(id);
         return companyMapper.companyToDto(companyService.edit(companyMapper.dtoToCompany(dto), id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
