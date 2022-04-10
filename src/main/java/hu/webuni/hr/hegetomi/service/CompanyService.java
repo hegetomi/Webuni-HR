@@ -52,6 +52,13 @@ public class CompanyService {
 
     @Transactional
     public void delete(long id) {
+        //Orphaning employees
+        Optional<Company> selected = findById(id);
+        if (selected.isPresent()) {
+            for (Employee e : selected.get().getEmployees()) {
+                e.setWorksAt(null);
+            }
+        }
         companyRepository.deleteById(id);
     }
 
