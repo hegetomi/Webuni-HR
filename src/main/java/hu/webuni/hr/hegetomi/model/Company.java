@@ -1,5 +1,7 @@
 package hu.webuni.hr.hegetomi.model;
 
+import hu.webuni.hr.hegetomi.validation.CompanyTypeValidation;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,13 +17,15 @@ public class Company {
     private String address;
     @OneToMany(mappedBy = "worksAt", fetch = FetchType.EAGER)
     private List<Employee> employees;
+    private String type;
 
-    public Company(long id, long registrationNumber, String name, String address, List<Employee> employees) {
+    public Company(long id, long registrationNumber, String name, String address,String type, List<Employee> employees) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.name = name;
         this.address = address;
         this.employees = employees;
+        this.type = type;
     }
 
     public long getId() {
@@ -59,6 +63,14 @@ public class Company {
         this.address = address;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public List<Employee> getEmployees() {
         return employees;
     }
@@ -75,5 +87,18 @@ public class Company {
     public void removeEmployee(Employee employee){
         employees.remove(employee);
         employee.setWorksAt(null);
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", registrationNumber=" + registrationNumber +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", employees=" + employees +
+                '}';
     }
 }

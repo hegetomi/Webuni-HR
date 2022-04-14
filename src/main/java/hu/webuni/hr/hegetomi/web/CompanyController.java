@@ -51,13 +51,13 @@ public class CompanyController {
     }
 
     @PostMapping
-    public CompanyDto addCompany(@RequestBody CompanyDto dto) {
+    public CompanyDto addCompany(@RequestBody @Valid CompanyDto dto) {
         return companyMapper.companyToDto(companyService.save(companyMapper.dtoToCompany(dto)));
 
     }
 
     @PutMapping("/{id}")
-    public CompanyDto modifyCompany(@PathVariable long id, @RequestBody CompanyDto dto) {
+    public CompanyDto modifyCompany(@PathVariable long id, @RequestBody @Valid CompanyDto dto) {
         dto.setId(id);
         return companyMapper.companyToDto(companyService.edit(companyMapper.dtoToCompany(dto), id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));

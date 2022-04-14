@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CompanyService {
@@ -62,7 +60,6 @@ public class CompanyService {
         companyRepository.deleteById(id);
     }
 
-    //Employee validation is lost
     @Transactional
     public Optional<Employee> addEmployeeToCompany(long id, Employee employee) {
         if (!companyRepository.existsById(id)) {
@@ -90,7 +87,6 @@ public class CompanyService {
         }
     }
 
-    //Employee validation is lost
     @Transactional
     public Optional<List<Employee>> replaceEmployees(long compId, List<Employee> employees) {
 
@@ -119,6 +115,18 @@ public class CompanyService {
 
     }
 
+    public List<Company> findByEmployeeSalaryGreaterThan(long amount){
+        return companyRepository.findByEmployeeSalaryGreaterThan(amount);
+    }
+
+    public List<Company> findByEmployeesMoreThan(long amount){
+        return companyRepository.findByEmployeesMoreThan(amount);
+    }
+
+    public List<Object[]> getTitlesAvgSalary(){
+        return companyRepository.getTitlesAverageSalary();
+    }
+
     private void checkEmployeeIntegrity(long compId, Employee employee) {
         if (!employeeRepository.existsById(employee.getId())) {
             employee.setWorksAt(companyRepository.getById(compId));
@@ -134,6 +142,7 @@ public class CompanyService {
             }
         }
     }
+
 
     /**
      * Caution: You are entering spaghetti zone. Abandon all hope, ye who enter here.
