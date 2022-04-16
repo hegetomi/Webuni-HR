@@ -1,6 +1,7 @@
 package hu.webuni.hr.hegetomi.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import hu.webuni.hr.hegetomi.model.company.Company;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -14,18 +15,20 @@ public class Employee {
     @SequenceGenerator(name = "employee_seq", allocationSize = 1)
     private long id;
     private String name;
-    private String title;
+    @ManyToOne(targetEntity = Position.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "position_id")
+    private Position title;
     private long salary;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime empSince;
 
 
-    @ManyToOne(fetch = FetchType.EAGER  , cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "company_id")
     private Company worksAt;
 
-    public Employee(long id, String name, String title, long salary, LocalDateTime empSince) {
+    public Employee(long id, String name, Position title, long salary, LocalDateTime empSince) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -53,11 +56,11 @@ public class Employee {
         this.name = name;
     }
 
-    public String getTitle() {
+    public Position getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Position title) {
         this.title = title;
     }
 
@@ -83,5 +86,20 @@ public class Employee {
 
     public void setWorksAt(Company worksAt) {
         this.worksAt = worksAt;
+    }
+
+
+
+
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", title='" + title + '\'' +
+                ", salary=" + salary +
+                ", empSince=" + empSince +
+                '}';
     }
 }

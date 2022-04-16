@@ -1,9 +1,7 @@
 package hu.webuni.hr.hegetomi.mapper;
 
-import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.dto.company.CompanyTypeDto;
-import hu.webuni.hr.hegetomi.model.Company;
-import hu.webuni.hr.hegetomi.model.CompanyType;
+import hu.webuni.hr.hegetomi.model.company.CompanyType;
 import org.mapstruct.Mapper;
 
 import java.util.List;

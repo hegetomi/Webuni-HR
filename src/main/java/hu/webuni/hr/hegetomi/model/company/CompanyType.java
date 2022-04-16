@@ -1,4 +1,4 @@
-package hu.webuni.hr.hegetomi.model;
+package hu.webuni.hr.hegetomi.model.company;
 
 import javax.persistence.*;
 

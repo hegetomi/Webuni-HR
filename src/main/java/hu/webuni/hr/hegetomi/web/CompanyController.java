@@ -4,7 +4,7 @@ import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
 import hu.webuni.hr.hegetomi.mapper.CompanyMapper;
 import hu.webuni.hr.hegetomi.mapper.EmployeeMapper;
-import hu.webuni.hr.hegetomi.service.CompanyService;
+import hu.webuni.hr.hegetomi.service.company.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -81,11 +81,40 @@ public class CompanyController {
     }
 
     @PutMapping("/{id}/employees")
-    public List<EmployeeDto> replaceEmployees(@PathVariable long id, @RequestBody  List<@Valid EmployeeDto> dtos) {
+    public List<EmployeeDto> replaceEmployees(@PathVariable long id, @RequestBody List<@Valid EmployeeDto> dtos) {
 
         return employeeMapper.employeesToDtos(companyService.replaceEmployees(id, employeeMapper.DtosToEmployees(dtos))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
     }
 
+    @GetMapping(value = "/", params = "salary-amount")
+    public List<CompanyDto> findByEmployeeSalaryGreaterThan(@RequestParam long amount) {
+        return companyMapper.companiesToDtos(companyService.findByEmployeeSalaryGreaterThan(amount));
+    }
+
+    @GetMapping(value = "/", params = "employed-amount")
+    public List<CompanyDto> findByEmployeesMoreThan(long amount) {
+        return companyMapper.companiesToDtos(companyService.findByEmployeesMoreThan(amount));
+    }
+
+    @GetMapping("/averages")
+    public Map<Object, Object> getTitlesAverageSalary() {
+        List<Object[]> listOfAverages = companyService.getTitlesAvgSalary();
+        Map<Object, Object> values = new HashMap<>();
+        listOfAverages.forEach(e -> values.put(e[0], e[1]));
+        return values;
+    }
+
+    @PostMapping("/position-minimum")
+    public void raiseForAllAtPosition(@RequestParam String position, @RequestParam long newSalary) {
+        companyService.raiseForAllAtPosition(position, newSalary);
+    }
+
+    @PostMapping("/{id}-position-minimum")
+    public void raiseForAllAtCompanyAtPosition(@PathVariable long companyId,
+                                               @RequestParam String position,
+                                               @RequestParam long newSalary) {
+        companyService.raiseForAllAtCompanyAtPosition(companyId, position, newSalary);
+    }
 }

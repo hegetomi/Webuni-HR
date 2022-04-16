@@ -1,6 +1,7 @@
 package hu.webuni.hr.hegetomi.dto.company;
 
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
+import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
 import hu.webuni.hr.hegetomi.validation.CompanyTypeValidation;
 
 import javax.validation.Valid;
@@ -17,14 +18,17 @@ public class CompanyDto {
     @Valid
     private List<EmployeeDto> employees;
 
+    private List<CompanyPositionSalary> availablePositions;
 
-    public CompanyDto(long id, long registrationNumber, String name, String address,String type, List<EmployeeDto> employees) {
+
+    public CompanyDto(long id, long registrationNumber, String name, String address, String type, List<EmployeeDto> employees, List<CompanyPositionSalary> availablePositions) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.name = name;
         this.address = address;
-        this.employees = employees;
         this.type = type;
+        this.employees = employees;
+        this.availablePositions = availablePositions;
     }
 
     public long getId() {
@@ -78,5 +82,16 @@ public class CompanyDto {
         this.employees = employees;
     }
 
+    /* Stackoverflow
+    public List<CompanyPositionSalary> getAvailablePositions() {
+        return availablePositions;
+    }
 
+
+     */
+
+
+    public void setAvailablePositions(List<CompanyPositionSalary> availablePositions) {
+        this.availablePositions = availablePositions;
+    }
 }

@@ -1,10 +1,14 @@
-package hu.webuni.hr.hegetomi.service;
+package hu.webuni.hr.hegetomi.service.company;
 
 import hu.webuni.hr.hegetomi.exception.EmployeeIsEmployedException;
-import hu.webuni.hr.hegetomi.model.Company;
+import hu.webuni.hr.hegetomi.model.company.Company;
+import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
 import hu.webuni.hr.hegetomi.model.Employee;
-import hu.webuni.hr.hegetomi.repository.CompanyRepository;
+import hu.webuni.hr.hegetomi.model.Position;
+import hu.webuni.hr.hegetomi.repository.company.CompanyPositionSalaryRepository;
+import hu.webuni.hr.hegetomi.repository.company.CompanyRepository;
 import hu.webuni.hr.hegetomi.repository.EmployeeRepository;
+import hu.webuni.hr.hegetomi.repository.PositionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +26,19 @@ public class CompanyService {
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
+    CompanyPositionSalaryRepository companyPositionSalaryRepository;
 
+    @Autowired
+    PositionRepository positionRepository;
+
+    private final Logger logger = LoggerFactory.getLogger(CompanyService.class);
     @Transactional
     public Company save(Company company) {
         //Ensure data integrity - change employees from the respective api
         company.setEmployees(new ArrayList<>());
+        company.setAvailablePositions(new ArrayList<>());
+        //company.setAvailablePositions();
         return companyRepository.save(company);
     }
 
@@ -68,11 +80,14 @@ public class CompanyService {
             checkEmployeeIntegrity(id, employee);
 
             Company company = companyRepository.getById(id);
+            giveSalaryRaiseIfLower(company, employee);
             company.getEmployees().add(employee);
             //companyRepository.save(company);
             return Optional.of(employee);
         }
     }
+
+
 
     @Transactional
     public void deleteEmployeeFromCompany(long compId, long empId) {
@@ -89,25 +104,21 @@ public class CompanyService {
 
     @Transactional
     public Optional<List<Employee>> replaceEmployees(long compId, List<Employee> employees) {
-
-        Logger logger = LoggerFactory.getLogger(CompanyService.class);
-
         if (!companyRepository.existsById(compId)) {
             return Optional.empty();
         } else {
-
-            List<Employee> currEmployees = companyRepository.findById(compId).get().getEmployees();
-
+            Company company = companyRepository.findById(compId).get();
+            List<Employee> currEmployees = company.getEmployees();
             for (Employee employee : employees) {
+                //logger.warn(company.toString());
+                giveSalaryRaiseIfLower(company, employee);
                 checkEmployeeIntegrity(compId, employee);
             }
-
             for (Employee employee : currEmployees) {
                 employee.setWorksAt(null);
                 //employeeRepository.save(employee);
             }
-
-            Company company = companyRepository.getById(compId);
+            //Company company = companyRepository.getById(compId);
             company.setEmployees(employees);
             //companyRepository.save(company);
             return Optional.of(employees);
@@ -115,18 +126,65 @@ public class CompanyService {
 
     }
 
-    public List<Company> findByEmployeeSalaryGreaterThan(long amount){
+
+    public List<Company> findByEmployeeSalaryGreaterThan(long amount) {
         return companyRepository.findByEmployeeSalaryGreaterThan(amount);
     }
 
-    public List<Company> findByEmployeesMoreThan(long amount){
+    public List<Company> findByEmployeesMoreThan(long amount) {
         return companyRepository.findByEmployeesMoreThan(amount);
     }
 
-    public List<Object[]> getTitlesAvgSalary(){
+    public List<Object[]> getTitlesAvgSalary() {
         return companyRepository.getTitlesAverageSalary();
     }
 
+    public void raiseForAllAtPosition(String position, long newSalary) {
+        List<CompanyPositionSalary> companyPosition = companyPositionSalaryRepository.findByPositionName(position);
+        for (CompanyPositionSalary e : companyPosition) {
+            e.setMinimumSalary(newSalary);
+            companyPositionSalaryRepository.save(e);
+        }
+        List<Employee> employeeList = employeeRepository.findByTitle(position);
+        for (Employee e : employeeList) {
+            if (e.getSalary() < newSalary) e.setSalary(newSalary);
+            employeeRepository.save(e);
+        }
+    }
+
+    public void raiseForAllAtCompanyAtPosition(long companyId, String position, long newSalary) {
+        Optional<Company> company = companyRepository.findById(companyId);
+        if (company.isPresent()) {
+            CompanyPositionSalary companyPosition =
+                    companyPositionSalaryRepository.findByPositionNameAtCompany(position, companyId);
+            companyPosition.setMinimumSalary(newSalary);
+            companyPositionSalaryRepository.save(companyPosition);
+
+            List<Employee> employees = company.get().getEmployees();
+            for (Employee e : employees) {
+                if (e.getTitle().getName().equals(position)) {
+                    e.setSalary(newSalary);
+                    employeeRepository.save(e);
+                }
+            }
+        }
+    }
+    private Employee giveSalaryRaiseIfLower(Company company, Employee employee) {
+        Optional<CompanyPositionSalary> possiblePosition = company.getAvailablePositions().stream()
+                .filter(e -> e.getPosition().getName().equals(employee.getTitle().getName())).findFirst();
+
+        if (possiblePosition.isPresent()) {
+            employee.setTitle(possiblePosition.get().getPosition());
+            if (employee.getSalary() < possiblePosition.get().getMinimumSalary())
+                employee.setSalary(possiblePosition.get().getMinimumSalary());
+        } else {
+            //Given position does not exist at company- create a separate (checked) exception perhaps?
+            Position pos = positionRepository.save(employee.getTitle());
+            companyPositionSalaryRepository.save(new CompanyPositionSalary(0,company,pos,1));
+            //throw new RuntimeException();
+        }
+        return employee;
+    }
     private void checkEmployeeIntegrity(long compId, Employee employee) {
         if (!employeeRepository.existsById(employee.getId())) {
             employee.setWorksAt(companyRepository.getById(compId));
@@ -143,63 +201,4 @@ public class CompanyService {
         }
     }
 
-
-    /**
-     * Caution: You are entering spaghetti zone. Abandon all hope, ye who enter here.
-     *
-     * @param company
-     */
-   /* private void saveNewEmployees(Company company) {
-
-        Logger logger = LoggerFactory.getLogger(CompanyService.class);
-        for (Employee e : company.getEmployees()) {
-            logger.warn(String.valueOf(e.getId()));
-            if (!employeeRepository.existsById(e.getId())) {
-                e.setWorksAt(company);
-                employeeRepository.save(e);
-            } else {
-                List<Company> companies = findAll();
-                for (Company c : companies) {
-                    Optional<Employee> isEmpEmployed = c.getEmployees()
-                            .stream()
-                            .filter(employee -> employee.getId() == e.getId())
-                            .findFirst();
-                    if (isEmpEmployed.isPresent() && c.getId() != company.getId()) {
-                        throw new EmployeeIsEmployedException(e.getId());
-                    }
-                }
-            }
-        }
-    }
-
-    public void trySavingNew(Company company) {
-        for (Employee e : company.getEmployees()) {
-
-            Optional<Employee> employeeToSave = employeeRepository.findById(e.getId());
-            //1. Employee does not exist - however no validation here, suboptimal
-            if (employeeToSave.isEmpty()) {
-                e.setWorksAt(company);
-                employeeRepository.save(e);
-            } else {
-                Employee existingEmployee = employeeToSave.get();
-                //2. Employee exists, with no company
-                if (existingEmployee.getWorksAt() == null) {
-                    e.setWorksAt(company);
-                    employeeRepository.save(e);
-                } else {
-                    //3. Employee exists, with other company
-                    if (existingEmployee.getWorksAt().getId() != company.getId()) {
-                        throw new EmployeeIsEmployedException(e.getId());
-                    } else {
-                        employeeRepository.save(e);
-                    }
-                }
-            }
-
-
-        }
-    }
-
-
-    */
 }

@@ -1,7 +1,7 @@
 package hu.webuni.hr.hegetomi.validation;
 
-import hu.webuni.hr.hegetomi.model.CompanyType;
-import hu.webuni.hr.hegetomi.service.CompanyTypeService;
+import hu.webuni.hr.hegetomi.model.company.CompanyType;
+import hu.webuni.hr.hegetomi.service.company.CompanyTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +33,9 @@ public class CompanyTypeValidator implements ConstraintValidator<CompanyTypeVali
         Optional<CompanyType> existingType = types.stream().filter(t -> t.getType().equals(type)).findFirst();
         if (existingType.isPresent()) {
             return true;
-        } else throw new RuntimeException();
+        } else {
+            constraintValidatorContext.buildConstraintViolationWithTemplate(type + " is not found in the database.").addConstraintViolation();
+            return false;
+        }
     }
 }

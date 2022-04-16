@@ -1,8 +1,7 @@
-package hu.webuni.hr.hegetomi.service;
+package hu.webuni.hr.hegetomi.service.company;
 
-import hu.webuni.hr.hegetomi.mapper.CompanyTypeMapper;
-import hu.webuni.hr.hegetomi.model.CompanyType;
-import hu.webuni.hr.hegetomi.repository.CompanyTypeRepository;
+import hu.webuni.hr.hegetomi.model.company.CompanyType;
+import hu.webuni.hr.hegetomi.repository.company.CompanyTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

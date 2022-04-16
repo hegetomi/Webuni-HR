@@ -1,7 +1,8 @@
 package hu.webuni.hr.hegetomi.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import hu.webuni.hr.hegetomi.model.Company;
+import hu.webuni.hr.hegetomi.model.company.Company;
+import hu.webuni.hr.hegetomi.model.Position;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
@@ -14,8 +15,8 @@ public class EmployeeDto {
     @NotEmpty(message = "Name cannot be null or empty")
     private String name;
 
-    @NotEmpty(message = "Title cannot be null or empty")
-    private String title;
+    @NotNull(message = "Title cannot be null")
+    private Position title;
 
     @Positive
     private long salary;
@@ -27,7 +28,7 @@ public class EmployeeDto {
     @Past
     private LocalDateTime empSince;
 
-    public EmployeeDto(long id, String name, String title, long salary, LocalDateTime empSince) {
+    public EmployeeDto(long id, String name, Position title, long salary, LocalDateTime empSince) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -55,11 +56,11 @@ public class EmployeeDto {
         this.name = name;
     }
 
-    public String getTitle() {
+    public Position getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Position title) {
         this.title = title;
     }
 

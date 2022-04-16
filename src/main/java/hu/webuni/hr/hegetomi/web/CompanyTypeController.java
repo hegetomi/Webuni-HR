@@ -2,8 +2,8 @@ package hu.webuni.hr.hegetomi.web;
 
 import hu.webuni.hr.hegetomi.dto.company.CompanyTypeDto;
 import hu.webuni.hr.hegetomi.mapper.CompanyTypeMapper;
-import hu.webuni.hr.hegetomi.model.CompanyType;
-import hu.webuni.hr.hegetomi.service.CompanyTypeService;
+import hu.webuni.hr.hegetomi.model.company.CompanyType;
+import hu.webuni.hr.hegetomi.service.company.CompanyTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

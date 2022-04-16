@@ -1,6 +1,8 @@
-package hu.webuni.hr.hegetomi.model;
+package hu.webuni.hr.hegetomi.model.company;
 
-import hu.webuni.hr.hegetomi.validation.CompanyTypeValidation;
+import hu.webuni.hr.hegetomi.model.Employee;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,17 +17,25 @@ public class Company {
     private long registrationNumber;
     private String name;
     private String address;
-    @OneToMany(mappedBy = "worksAt", fetch = FetchType.EAGER)
-    private List<Employee> employees;
-    private String type;
 
-    public Company(long id, long registrationNumber, String name, String address,String type, List<Employee> employees) {
+    private String type;
+    @OneToMany(mappedBy = "worksAt")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Employee> employees;
+
+    @OneToMany(mappedBy = "company", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<CompanyPositionSalary> availablePositions;
+
+
+    public Company(long id, long registrationNumber, String name, String address, String type, List<Employee> employees, List<CompanyPositionSalary> availablePositions) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.name = name;
         this.address = address;
-        this.employees = employees;
         this.type = type;
+        this.employees = employees;
+        this.availablePositions = availablePositions;
     }
 
     public long getId() {
@@ -90,6 +100,13 @@ public class Company {
     }
 
 
+    public List<CompanyPositionSalary> getAvailablePositions() {
+        return availablePositions;
+    }
+
+    public void setAvailablePositions(List<CompanyPositionSalary> availablePositions) {
+        this.availablePositions = availablePositions;
+    }
 
     @Override
     public String toString() {
