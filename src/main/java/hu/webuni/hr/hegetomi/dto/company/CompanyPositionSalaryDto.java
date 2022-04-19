@@ -1,6 +1,7 @@
 package hu.webuni.hr.hegetomi.dto.company;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hu.webuni.hr.hegetomi.dto.PositionDto;
 import hu.webuni.hr.hegetomi.model.Position;
 import hu.webuni.hr.hegetomi.model.company.Company;
 
@@ -12,16 +13,16 @@ public class CompanyPositionSalaryDto {
 
 
     @JsonIgnore
-    Company company;
+    CompanyDto company;
 
-    Position position;
+    PositionDto position;
 
     long minimumSalary;
 
     public CompanyPositionSalaryDto() {
     }
 
-    public CompanyPositionSalaryDto(long id, Company company, Position position, long minimumSalary) {
+    public CompanyPositionSalaryDto(long id, CompanyDto company, PositionDto position, long minimumSalary) {
         this.id = id;
         this.company = company;
         this.position = position;
@@ -36,19 +37,19 @@ public class CompanyPositionSalaryDto {
         this.id = id;
     }
 
-    public Company getCompany() {
+    public CompanyDto getCompany() {
         return company;
     }
 
-    public void setCompany(Company company) {
+    public void setCompany(CompanyDto company) {
         this.company = company;
     }
 
-    public Position getPosition() {
+    public PositionDto getPosition() {
         return position;
     }
 
-    public void setPosition(Position position) {
+    public void setPosition(PositionDto position) {
         this.position = position;
     }
 

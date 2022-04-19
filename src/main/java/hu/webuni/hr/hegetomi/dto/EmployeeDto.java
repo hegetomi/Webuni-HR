@@ -1,6 +1,7 @@
 package hu.webuni.hr.hegetomi.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.model.company.Company;
 import hu.webuni.hr.hegetomi.model.Position;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,23 +17,24 @@ public class EmployeeDto {
     private String name;
 
     @NotNull(message = "Title cannot be null")
-    private Position title;
+    private PositionDto title;
 
     @Positive
     private long salary;
 
-    private Company worksAt;
+    private CompanyDto worksAt;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Past
     private LocalDateTime empSince;
 
-    public EmployeeDto(long id, String name, Position title, long salary, LocalDateTime empSince) {
+    public EmployeeDto(long id, String name, PositionDto title, long salary, CompanyDto worksAt, LocalDateTime empSince) {
         this.id = id;
         this.name = name;
         this.title = title;
         this.salary = salary;
+        this.worksAt = worksAt;
         this.empSince = empSince;
     }
 
@@ -56,11 +58,11 @@ public class EmployeeDto {
         this.name = name;
     }
 
-    public Position getTitle() {
+    public PositionDto getTitle() {
         return title;
     }
 
-    public void setTitle(Position title) {
+    public void setTitle(PositionDto title) {
         this.title = title;
     }
 
@@ -80,9 +82,11 @@ public class EmployeeDto {
         this.empSince = empSince;
     }
 
-    public void setWorksAt(Company worksAt) {
+    public void setWorksAt(CompanyDto worksAt) {
         this.worksAt = worksAt;
     }
-    //No worksat getter to hide it, else stackoverflow :C
 
+    public CompanyDto getWorksAt() {
+        return worksAt;
+    }
 }
