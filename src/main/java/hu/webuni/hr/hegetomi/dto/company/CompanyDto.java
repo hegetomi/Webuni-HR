@@ -18,10 +18,10 @@ public class CompanyDto {
     @Valid
     private List<EmployeeDto> employees;
 
-    private List<CompanyPositionSalary> availablePositions;
+    private List<CompanyPositionSalaryDto> availablePositions;
 
 
-    public CompanyDto(long id, long registrationNumber, String name, String address, String type, List<EmployeeDto> employees, List<CompanyPositionSalary> availablePositions) {
+    public CompanyDto(long id, long registrationNumber, String name, String address, String type, List<EmployeeDto> employees, List<CompanyPositionSalaryDto> availablePositions) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.name = name;
@@ -82,16 +82,16 @@ public class CompanyDto {
         this.employees = employees;
     }
 
-    /* Stackoverflow
-    public List<CompanyPositionSalary> getAvailablePositions() {
+
+    public List<CompanyPositionSalaryDto> getAvailablePositions() {
         return availablePositions;
     }
 
 
-     */
 
 
-    public void setAvailablePositions(List<CompanyPositionSalary> availablePositions) {
+
+    public void setAvailablePositions(List<CompanyPositionSalaryDto> availablePositions) {
         this.availablePositions = availablePositions;
     }
 }
