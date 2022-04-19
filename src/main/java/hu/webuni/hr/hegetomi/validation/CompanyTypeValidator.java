@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanyTypeValidator implements ConstraintValidator<CompanyTypeValidation, String> {
+public class CompanyTypeValidator implements ConstraintValidator<CompanyTypeValidation, CompanyType> {
 
     @Autowired
     CompanyTypeService companyTypeService;
@@ -25,12 +25,12 @@ public class CompanyTypeValidator implements ConstraintValidator<CompanyTypeVali
     }
 
     @Override
-    public boolean isValid(String type, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(CompanyType type, ConstraintValidatorContext constraintValidatorContext) {
 
-        logger.warn(type);
+        logger.warn(type.getName());
         List<CompanyType> types = companyTypeService.findAll();
 
-        Optional<CompanyType> existingType = types.stream().filter(t -> t.getType().equals(type)).findFirst();
+        Optional<CompanyType> existingType = types.stream().filter(t -> t.getName().equals(type.getName())).findFirst();
         if (existingType.isPresent()) {
             return true;
         } else {

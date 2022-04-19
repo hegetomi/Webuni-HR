@@ -2,6 +2,7 @@ package hu.webuni.hr.hegetomi.dto.company;
 
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
 import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
+import hu.webuni.hr.hegetomi.model.company.CompanyType;
 import hu.webuni.hr.hegetomi.validation.CompanyTypeValidation;
 
 import javax.validation.Valid;
@@ -13,15 +14,17 @@ public class CompanyDto {
     private long registrationNumber;
     private String name;
     private String address;
+
     @CompanyTypeValidation
-    private String type;
+    private CompanyTypeDto type;
+
     @Valid
     private List<EmployeeDto> employees;
 
     private List<CompanyPositionSalaryDto> availablePositions;
 
 
-    public CompanyDto(long id, long registrationNumber, String name, String address, String type, List<EmployeeDto> employees, List<CompanyPositionSalaryDto> availablePositions) {
+    public CompanyDto(long id, long registrationNumber, String name, String address, CompanyTypeDto type, List<EmployeeDto> employees, List<CompanyPositionSalaryDto> availablePositions) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.name = name;
@@ -66,11 +69,11 @@ public class CompanyDto {
         this.address = address;
     }
 
-    public String getType() {
+    public CompanyTypeDto getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CompanyTypeDto type) {
         this.type = type;
     }
 

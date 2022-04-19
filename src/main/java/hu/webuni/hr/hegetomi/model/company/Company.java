@@ -18,7 +18,9 @@ public class Company {
     private String name;
     private String address;
 
-    private String type;
+    @ManyToOne
+    private CompanyType type;
+
     @OneToMany(mappedBy = "worksAt")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Employee> employees;
@@ -28,7 +30,7 @@ public class Company {
     private List<CompanyPositionSalary> availablePositions;
 
 
-    public Company(long id, long registrationNumber, String name, String address, String type, List<Employee> employees, List<CompanyPositionSalary> availablePositions) {
+    public Company(long id, long registrationNumber, String name, String address, CompanyType type, List<Employee> employees, List<CompanyPositionSalary> availablePositions) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.name = name;
@@ -73,11 +75,11 @@ public class Company {
         this.address = address;
     }
 
-    public String getType() {
+    public CompanyType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CompanyType type) {
         this.type = type;
     }
 

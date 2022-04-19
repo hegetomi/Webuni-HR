@@ -1,30 +1,25 @@
 package hu.webuni.hr.hegetomi.dto.company;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-
 public class CompanyTypeDto {
 
 
     private long id;
-    private String type;
+    private String name;
 
     public CompanyTypeDto() {
     }
 
     public CompanyTypeDto(long id, String type) {
         this.id = id;
-        this.type = type;
+        this.name = type;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setId(long id) {

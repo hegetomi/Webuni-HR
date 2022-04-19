@@ -9,22 +9,22 @@ public class CompanyType {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comp_type_seq")
     @SequenceGenerator(name = "comp_type_seq", allocationSize = 1)
     private long id;
-    private String type;
+    private String name;
 
     public CompanyType() {
     }
 
-    public CompanyType(long id, String type) {
+    public CompanyType(long id, String name) {
         this.id = id;
-        this.type = type;
+        this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String type) {
+        this.name = type;
     }
 
     public void setId(long id) {

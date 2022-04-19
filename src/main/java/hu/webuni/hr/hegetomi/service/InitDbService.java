@@ -47,21 +47,37 @@ public class InitDbService {
     public void insertTestData() {
 
         //Setup types
-        companyTypeRepository.save(new CompanyType(0, "bt"));
-        companyTypeRepository.save(new CompanyType(0, "kft"));
-        companyTypeRepository.save(new CompanyType(0, "nyrt"));
-        companyTypeRepository.save(new CompanyType(0, "zrt"));
-        //setup positions
+        CompanyType bt = new CompanyType(0, "bt");
+        CompanyType kft = new CompanyType(0, "kft");
+        CompanyType nyrt = new CompanyType(0, "nyrt");
+        CompanyType zrt = new CompanyType(0, "zrt");
+        companyTypeRepository.saveAll(List.of(bt,kft,nyrt,zrt));
+//setup positions
         positionRepository.save(new Position(0, "Gyakornok", null));
         positionRepository.save(new Position(0, "Előadó", "Msc"));
         positionRepository.save(new Position(0, "Fogalmazó", "Bsc"));
         positionRepository.save(new Position(0, "Titkár", "Érettségi"));
         positionRepository.save(new Position(0, "Főelőadó", "Phd"));
-        //save dummy companies
-        Company comp1 = new Company(0, 123456, "Pest m. Kormányhivatal", "1113 Hosszú utca 234", "bt", new ArrayList<>(),new ArrayList<>());
-        Company comp2 = new Company(0, 123456, "Sz-Sz-B m. Földhivatal", "4400 Kossuth utca 1", "kft", new ArrayList<>(), new ArrayList<>());
+//save dummy companies
+        Company comp1 = new Company();
+        comp1.setId(0);
+        comp1.setRegistrationNumber(123456);
+        comp1.setName("Pest m. Kormányhivatal");
+        comp1.setAddress("1113 Hosszú utca 234");
+        comp1.setType(companyTypeRepository.findByName("bt").get());
+        comp1.setEmployees(new ArrayList<>());
         comp1.setAvailablePositions(new ArrayList<>());
+//Company comp1 = new Company(0, 123456, "Pest m. Kormányhivatal", "1113 Hosszú utca 234", "bt", new ArrayList<>(),new ArrayList<>());
+//Company comp2 = new Company(0, 123456, "Sz-Sz-B m. Földhivatal", "4400 Kossuth utca 1", "kft", new ArrayList<>(), new ArrayList<>());
+        Company comp2 = new Company();
+        comp2.setId(0);
+        comp2.setRegistrationNumber(123456);
+        comp2.setName("Sz-Sz-B m. Földhivatal");
+        comp2.setAddress("4400 Kossuth utca 1");
+        comp2.setType(companyTypeRepository.findByName("kft").get());
+        comp2.setEmployees(new ArrayList<>());
         comp2.setAvailablePositions(new ArrayList<>());
+
         companyRepository.save(comp1);
         companyRepository.save(comp2);
 

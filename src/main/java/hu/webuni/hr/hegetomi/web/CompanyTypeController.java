@@ -26,7 +26,7 @@ public class CompanyTypeController {
 
         CompanyTypeDto savedDto = companyTypeMapper
                 .companyToDto(companyTypeService.save(companyTypeMapper.dtoToCompany(type)));
-        return Map.of("type", savedDto.getType());
+        return Map.of("type", savedDto.getName());
     }
 
     @GetMapping("/get")
