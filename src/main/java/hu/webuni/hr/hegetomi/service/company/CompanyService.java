@@ -1,5 +1,6 @@
 package hu.webuni.hr.hegetomi.service.company;
 
+import hu.webuni.hr.hegetomi.dto.ResultPair;
 import hu.webuni.hr.hegetomi.exception.EmployeeIsEmployedException;
 import hu.webuni.hr.hegetomi.model.company.Company;
 import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -33,6 +35,7 @@ public class CompanyService {
     PositionRepository positionRepository;
 
     private final Logger logger = LoggerFactory.getLogger(CompanyService.class);
+
     @Transactional
     public Company save(Company company) {
         //Ensure data integrity - change employees from the respective api
@@ -88,7 +91,6 @@ public class CompanyService {
     }
 
 
-
     @Transactional
     public void deleteEmployeeFromCompany(long compId, long empId) {
         if (companyRepository.existsById(compId)) {
@@ -131,12 +133,16 @@ public class CompanyService {
         return companyRepository.findByEmployeeSalaryGreaterThan(amount);
     }
 
-    public List<Company> findByEmployeesMoreThan(long amount) {
+    public List<Company> findByEmployeesMoreThan(int amount) {
         return companyRepository.findByEmployeesMoreThan(amount);
     }
 
-    public List<Object[]> getTitlesAvgSalary() {
-        return companyRepository.getTitlesAverageSalary();
+    public List<ResultPair<String, Double>> getTitlesAvgSalary() {
+        List<Object[]> resultSet = companyRepository.getTitlesAverageSalary();
+        List<ResultPair<String, Double>> returnSet = resultSet.stream()
+                .map(e -> new ResultPair<>((String) e[0], (Double) e[1]))
+                .collect(Collectors.toList());
+        return returnSet;
     }
 
     public void raiseForAllAtPosition(String position, long newSalary) {
@@ -169,6 +175,7 @@ public class CompanyService {
             }
         }
     }
+
     private Employee giveSalaryRaiseIfLower(Company company, Employee employee) {
         Optional<CompanyPositionSalary> possiblePosition = company.getAvailablePositions().stream()
                 .filter(e -> e.getPosition().getName().equals(employee.getTitle().getName())).findFirst();
@@ -180,11 +187,12 @@ public class CompanyService {
         } else {
             //Given position does not exist at company- create a separate (checked) exception perhaps?
             Position pos = positionRepository.save(employee.getTitle());
-            companyPositionSalaryRepository.save(new CompanyPositionSalary(0,company,pos,1));
+            companyPositionSalaryRepository.save(new CompanyPositionSalary(0, company, pos, 1));
             //throw new RuntimeException();
         }
         return employee;
     }
+
     private void checkEmployeeIntegrity(long compId, Employee employee) {
         if (!employeeRepository.existsById(employee.getId())) {
             employee.setWorksAt(companyRepository.getById(compId));

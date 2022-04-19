@@ -1,5 +1,6 @@
 package hu.webuni.hr.hegetomi;
 
+import hu.webuni.hr.hegetomi.dto.ResultPair;
 import hu.webuni.hr.hegetomi.model.company.Company;
 import hu.webuni.hr.hegetomi.model.Employee;
 import hu.webuni.hr.hegetomi.model.Position;
@@ -62,8 +63,8 @@ public class HrApplication implements CommandLineRunner {
         List<Company> companyList2 = companyService.findByEmployeesMoreThan(6);
         companyList2.forEach(System.out::println);
 
-        List<Object[]> averages = companyService.getTitlesAvgSalary();
-        averages.forEach(a -> System.out.println(a[0] + " " + a[1]));
+        List<ResultPair<String, Double>> averages = companyService.getTitlesAvgSalary();
+        averages.forEach(a -> System.out.println(a.getKey() + " " + a.getValue()));
 
 
         //Paging test
