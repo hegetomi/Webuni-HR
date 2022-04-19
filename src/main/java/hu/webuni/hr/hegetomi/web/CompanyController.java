@@ -5,7 +5,6 @@ import hu.webuni.hr.hegetomi.dto.company.CompanyDto;
 import hu.webuni.hr.hegetomi.dto.EmployeeDto;
 import hu.webuni.hr.hegetomi.mapper.CompanyMapper;
 import hu.webuni.hr.hegetomi.mapper.EmployeeMapper;
-import hu.webuni.hr.hegetomi.model.Employee;
 import hu.webuni.hr.hegetomi.service.company.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -101,7 +100,7 @@ public class CompanyController {
     }
 
     @GetMapping("/averages")
-    public List<ResultPair<String, Double>> getTitlesAverageSalary() {
+    public List<ResultPair<String,Double>> getTitlesAverageSalary() {
         return companyService.getTitlesAvgSalary();
     }
 
@@ -111,9 +110,9 @@ public class CompanyController {
     }
 
     @PostMapping("/{id}-position-minimum")
-    public void raiseForAllAtCompanyAtPosition(@PathVariable long companyId,
+    public void raiseForAllAtCompanyAtPosition(@PathVariable long id,
                                                @RequestParam String position,
                                                @RequestParam long newSalary) {
-        companyService.raiseForAllAtCompanyAtPosition(companyId, position, newSalary);
+        companyService.raiseForAllAtCompanyAtPosition(id, position, newSalary);
     }
 }

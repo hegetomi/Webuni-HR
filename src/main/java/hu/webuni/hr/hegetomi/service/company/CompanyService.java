@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class CompanyService {
@@ -138,10 +137,8 @@ public class CompanyService {
     }
 
     public List<ResultPair<String, Double>> getTitlesAvgSalary() {
-        List<Object[]> resultSet = companyRepository.getTitlesAverageSalary();
-        List<ResultPair<String, Double>> returnSet = resultSet.stream()
-                .map(e -> new ResultPair<>((String) e[0], (Double) e[1]))
-                .collect(Collectors.toList());
+        List<ResultPair<String, Double>> returnSet = companyRepository.getTitlesAverageSalary();
+        returnSet.sort(Comparator.comparing(ResultPair::getValue, Comparator.reverseOrder()));
         return returnSet;
     }
 

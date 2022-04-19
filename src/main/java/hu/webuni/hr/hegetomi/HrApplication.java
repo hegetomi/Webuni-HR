@@ -63,7 +63,8 @@ public class HrApplication implements CommandLineRunner {
         List<Company> companyList2 = companyService.findByEmployeesMoreThan(6);
         companyList2.forEach(System.out::println);
 
-        List<ResultPair<String, Double>> averages = companyService.getTitlesAvgSalary();
+        System.out.println("--------------------------AVERAGES----------------------");
+        List<ResultPair<String,Double>> averages = companyService.getTitlesAvgSalary();
         averages.forEach(a -> System.out.println(a.getKey() + " " + a.getValue()));
 
 

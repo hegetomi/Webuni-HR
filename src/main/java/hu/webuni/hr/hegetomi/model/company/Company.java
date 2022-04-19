@@ -21,12 +21,11 @@ public class Company {
     @ManyToOne
     private CompanyType type;
 
-    @OneToMany(mappedBy = "worksAt")
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "worksAt", fetch = FetchType.EAGER)
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "company", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
-    @LazyCollection(LazyCollectionOption.FALSE)
+
     private List<CompanyPositionSalary> availablePositions;
 
 

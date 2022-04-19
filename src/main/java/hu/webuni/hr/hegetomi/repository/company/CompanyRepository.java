@@ -1,6 +1,6 @@
 package hu.webuni.hr.hegetomi.repository.company;
 
-import hu.webuni.hr.hegetomi.model.Employee;
+import hu.webuni.hr.hegetomi.dto.ResultPair;
 import hu.webuni.hr.hegetomi.model.company.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +27,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
  */
 
-    @Query(value = "select t.name as name, avg(e.salary) as salary from Employee e inner join e.title t group by t")
-    List<Object[]> getTitlesAverageSalary();
+    @Query(value = "select new hu.webuni.hr.hegetomi.dto.ResultPair(t.name, avg(e.salary)) from Employee e inner join e.title t group by t")
+    List<ResultPair<String,Double>> getTitlesAverageSalary();
 }
