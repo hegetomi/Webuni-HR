@@ -24,6 +24,7 @@ public interface CompanyMapper {
 
     @Named("mapWithoutEmployees")
     @Mapping(target = "employees", ignore = true)
+    //@Mapping(target = "availablePositions", ignore = true)
     CompanyDto mapWithoutEmployees(Company company);
 
 

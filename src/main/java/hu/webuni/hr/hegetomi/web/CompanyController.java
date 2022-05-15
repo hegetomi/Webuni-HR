@@ -33,9 +33,9 @@ public class CompanyController {
     @GetMapping
     public List<CompanyDto> getAll(@RequestParam(required = false, defaultValue = "false", name = "full") String full) {
         if ("true".equalsIgnoreCase(full)) {
-            return new ArrayList<>(companyMapper.companiesToDtos(companyService.findAll()));
+            return new ArrayList<>(companyMapper.companiesToDtos(companyService.findAllWithEmployees()));
         } else {
-            return new ArrayList<>(companyMapper.companiesToPartialCompanies(companyService.findAll()));
+            return new ArrayList<>(companyMapper.companiesToPartialCompanies(companyService.findAllWithEmployees()));
         }
 
     }

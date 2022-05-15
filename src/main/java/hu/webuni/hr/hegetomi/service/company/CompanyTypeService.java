@@ -16,7 +16,6 @@ public class CompanyTypeService {
 
 
     public CompanyType save(CompanyType type) {
-
         Optional<CompanyType> existingType = companyTypeRepository.findByName(type.getName());
         if (existingType.isEmpty()) {
             return companyTypeRepository.save(type);

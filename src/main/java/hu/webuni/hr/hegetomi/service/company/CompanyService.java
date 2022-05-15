@@ -2,21 +2,26 @@ package hu.webuni.hr.hegetomi.service.company;
 
 import hu.webuni.hr.hegetomi.dto.ResultPair;
 import hu.webuni.hr.hegetomi.exception.EmployeeIsEmployedException;
-import hu.webuni.hr.hegetomi.model.company.Company;
-import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
 import hu.webuni.hr.hegetomi.model.Employee;
 import hu.webuni.hr.hegetomi.model.Position;
-import hu.webuni.hr.hegetomi.repository.company.CompanyPositionSalaryRepository;
-import hu.webuni.hr.hegetomi.repository.company.CompanyRepository;
+import hu.webuni.hr.hegetomi.model.company.Company;
+import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
+import hu.webuni.hr.hegetomi.model.company.CompanyType;
 import hu.webuni.hr.hegetomi.repository.EmployeeRepository;
 import hu.webuni.hr.hegetomi.repository.PositionRepository;
+import hu.webuni.hr.hegetomi.repository.company.CompanyPositionSalaryRepository;
+import hu.webuni.hr.hegetomi.repository.company.CompanyRepository;
+import hu.webuni.hr.hegetomi.repository.company.CompanyTypeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompanyService {
@@ -33,6 +38,9 @@ public class CompanyService {
     @Autowired
     PositionRepository positionRepository;
 
+    @Autowired
+    CompanyTypeRepository companyTypeRepository;
+
     private final Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
     @Transactional
@@ -40,7 +48,7 @@ public class CompanyService {
         //Ensure data integrity - change employees from the respective api
         company.setEmployees(new ArrayList<>());
         company.setAvailablePositions(new ArrayList<>());
-        //company.setAvailablePositions();
+
         return companyRepository.save(company);
     }
 
@@ -58,8 +66,19 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
+    @Transactional
+    public List<Company> findAllWithEmployees() {
+        List<Company> companies = companyRepository.findAllWithEmployees();
+        companies = companyRepository.findAllWithPositions();
+
+        return  companies;
+    }
+
+    @Transactional
     public Optional<Company> findById(long id) {
-        return companyRepository.findById(id);
+        Optional<Company> byIdForEmployees = companyRepository.findByIdForEmployees(id);
+        byIdForEmployees = companyRepository.findByIdForPositions(id);
+        return byIdForEmployees;
     }
 
     @Transactional
@@ -108,20 +127,16 @@ public class CompanyService {
         if (!companyRepository.existsById(compId)) {
             return Optional.empty();
         } else {
-            Company company = companyRepository.findById(compId).get();
+            Company company = companyRepository.findByIdForEmployees(compId).get();
             List<Employee> currEmployees = company.getEmployees();
             for (Employee employee : employees) {
-                //logger.warn(company.toString());
                 giveSalaryRaiseIfLower(company, employee);
                 checkEmployeeIntegrity(compId, employee);
             }
             for (Employee employee : currEmployees) {
                 employee.setWorksAt(null);
-                //employeeRepository.save(employee);
             }
-            //Company company = companyRepository.getById(compId);
             company.setEmployees(employees);
-            //companyRepository.save(company);
             return Optional.of(employees);
         }
 
@@ -142,36 +157,39 @@ public class CompanyService {
         return returnSet;
     }
 
+    @Transactional
     public void raiseForAllAtPosition(String position, long newSalary) {
         List<CompanyPositionSalary> companyPosition = companyPositionSalaryRepository.findByPositionName(position);
         for (CompanyPositionSalary e : companyPosition) {
             e.setMinimumSalary(newSalary);
-            companyPositionSalaryRepository.save(e);
+            //companyPositionSalaryRepository.save(e);
         }
         List<Employee> employeeList = employeeRepository.findByTitle(position);
         for (Employee e : employeeList) {
             if (e.getSalary() < newSalary) e.setSalary(newSalary);
-            employeeRepository.save(e);
+            //employeeRepository.save(e);
         }
     }
 
+    @Transactional
     public void raiseForAllAtCompanyAtPosition(long companyId, String position, long newSalary) {
-        Optional<Company> company = companyRepository.findById(companyId);
+        Optional<Company> company = companyRepository.findByIdForEmployees(companyId);
         if (company.isPresent()) {
             CompanyPositionSalary companyPosition =
                     companyPositionSalaryRepository.findByPositionNameAtCompany(position, companyId);
             companyPosition.setMinimumSalary(newSalary);
-            companyPositionSalaryRepository.save(companyPosition);
+            //companyPositionSalaryRepository.save(companyPosition);
 
             List<Employee> employees = company.get().getEmployees();
             for (Employee e : employees) {
                 if (e.getTitle().getName().equals(position)) {
                     e.setSalary(newSalary);
-                    employeeRepository.save(e);
+                    //employeeRepository.save(e);
                 }
             }
         }
     }
+
 
     private Employee giveSalaryRaiseIfLower(Company company, Employee employee) {
         Optional<CompanyPositionSalary> possiblePosition = company.getAvailablePositions().stream()
@@ -182,10 +200,8 @@ public class CompanyService {
             if (employee.getSalary() < possiblePosition.get().getMinimumSalary())
                 employee.setSalary(possiblePosition.get().getMinimumSalary());
         } else {
-            //Given position does not exist at company- create a separate (checked) exception perhaps?
             Position pos = positionRepository.save(employee.getTitle());
             companyPositionSalaryRepository.save(new CompanyPositionSalary(0, company, pos, 1));
-            //throw new RuntimeException();
         }
         return employee;
     }
@@ -205,5 +221,20 @@ public class CompanyService {
             }
         }
     }
+
+    @Transactional
+    public Company createCompany(String companyName, String address, int registrationNumber, String companyTypeName){
+
+        Company company = new Company();
+        company.setName(companyName);
+        company.setAddress(address);
+        company.setRegistrationNumber(registrationNumber);
+        company.setType(companyTypeRepository.findByName(companyTypeName)
+                .orElse(companyTypeRepository.save(new CompanyType(0L,companyTypeName))));
+        company.setEmployees(new ArrayList<>());
+        company.setAvailablePositions(new ArrayList<>());
+        return companyRepository.save(company);
+    }
+
 
 }

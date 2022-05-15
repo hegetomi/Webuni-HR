@@ -7,6 +7,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
 import java.util.List;
 
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "Company.employees",
+                attributeNodes = {@NamedAttributeNode(value = "employees"), @NamedAttributeNode(value = "type")}
+        ),
+        @NamedEntityGraph(name = "Company.positions",
+                attributeNodes = @NamedAttributeNode(value = "availablePositions")
+        )
+})
 @Entity
 public class Company {
 
@@ -21,11 +29,10 @@ public class Company {
     @ManyToOne
     private CompanyType type;
 
-    @OneToMany(mappedBy = "worksAt", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "worksAt")
     private List<Employee> employees;
 
     @OneToMany(mappedBy = "company", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
-
     private List<CompanyPositionSalary> availablePositions;
 
 
@@ -90,12 +97,12 @@ public class Company {
         this.employees = employees;
     }
 
-    public void addEmployee(Employee employee){
+    public void addEmployee(Employee employee) {
         employees.add(employee);
         employee.setWorksAt(this);
     }
 
-    public void removeEmployee(Employee employee){
+    public void removeEmployee(Employee employee) {
         employees.remove(employee);
         employee.setWorksAt(null);
     }

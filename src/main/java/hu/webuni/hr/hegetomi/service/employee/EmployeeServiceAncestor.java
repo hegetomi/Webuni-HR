@@ -1,5 +1,6 @@
 package hu.webuni.hr.hegetomi.service.employee;
 
+import hu.webuni.hr.hegetomi.model.company.Company;
 import hu.webuni.hr.hegetomi.model.company.CompanyPositionSalary;
 import hu.webuni.hr.hegetomi.model.Employee;
 import hu.webuni.hr.hegetomi.model.Position;
@@ -9,7 +10,10 @@ import hu.webuni.hr.hegetomi.repository.PositionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,7 +50,7 @@ public abstract class EmployeeServiceAncestor {
         }
         return Optional.empty();
     }
-//Built-in cascading does not work at all
+
     private void cascadePosition(Employee employee) {
         Optional<Position> position = positionRepository.getByName(employee.getTitle().getName());
         if(position.isEmpty()) {
@@ -85,6 +89,50 @@ public abstract class EmployeeServiceAncestor {
 
     public List<Employee> findByEmpSinceBetween(LocalDateTime d1, LocalDateTime d2) {
         return employeeRepository.findByEmpSinceBetween(d1, d2);
+    }
+
+    public List<Employee> findByExample(Employee employee){
+
+        long id = employee.getId();
+        String name = employee.getName();
+        Position position = employee.getTitle();
+        long salary = employee.getSalary();
+        LocalDateTime localDateTime = employee.getEmpSince();
+        Company worksAt = employee.getWorksAt();
+
+        Specification<Employee> spec = Specification.where(null);
+
+        if(id>0){
+            spec = spec.and(EmployeeSpecification.hasId(id));
+        }
+        if(StringUtils.hasText(name)){
+            spec = spec.and(EmployeeSpecification.hasName(name));
+        }
+        if(position != null){
+            spec = spec.and(EmployeeSpecification.hasPosition(position.getName()));
+        }
+        if(salary > 0){
+            spec = spec.and(EmployeeSpecification.hasSalary(salary));
+        }
+        if(localDateTime != null){
+            spec = spec.and(EmployeeSpecification.hasEmpSince(localDateTime));
+        }
+        if(worksAt != null){
+            spec = spec.and(EmployeeSpecification.hasWorksAt(worksAt.getName()));
+        }
+        return employeeRepository.findAll(spec,Sort.by("id"));
+    }
+
+
+    @Transactional
+    public Employee createEmployee(String name, Position title,long salary,LocalDateTime empSince,Company worksAt){
+        Employee e = new Employee();
+        e.setName(name);
+        e.setTitle(title);
+        e.setSalary(salary);
+        e.setEmpSince(empSince);
+        e.setWorksAt(worksAt);
+        return employeeRepository.save(e);
     }
 
 }

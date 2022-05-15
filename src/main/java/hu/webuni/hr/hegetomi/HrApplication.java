@@ -46,17 +46,11 @@ public class HrApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        /*
-        Employee e1 = new Employee(1, "John Doe", "Janitor",
-                10000, LocalDateTime.of(2000, 12, 5, 12, 0));
-        System.out.println(e1.getSalary());
-        salaryService.getNewSalary(e1);
-        System.out.println(e1.getSalary());
 
-         */
         initDbService.clearDB();
         initDbService.insertTestData();
 
+        /*
         List<Company> companyList = companyService.findByEmployeeSalaryGreaterThan(3499);
         companyList.forEach(System.out::println);
 
@@ -92,6 +86,8 @@ public class HrApplication implements CommandLineRunner {
 
         employeeServiceAncestor.save(new Employee(0, "Főni", new Position(0,"Főni","semmi"), 50000, LocalDateTime.of(2017, 4, 2, 1, 1)));
 
+
+         */
     }
 
 }
